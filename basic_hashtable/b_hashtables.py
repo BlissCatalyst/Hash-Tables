@@ -15,7 +15,9 @@ class Pair:
 # '''
 class BasicHashTable:
     def __init__(self, capacity):
-        pass
+        self.capacity = capacity
+        self.count = 0
+        self.storage = [None] * capacity
 
 
 # '''
@@ -23,7 +25,12 @@ class BasicHashTable:
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    pass
+    djb2_hash = 5381
+
+    for char in string:
+        djb2_hash = ((djb2_hash * 33) ^ char) % 0x100000000
+
+    return djb2_hash
 
 
 # '''
@@ -50,7 +57,11 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    for i in hash_table.storage:
+        if i == key:
+            return hash
+        else:
+            return None
 
 
 def Testing():
