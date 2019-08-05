@@ -28,7 +28,7 @@ def hash(string, max):
     djb2_hash = 5381
 
     for char in string:
-        djb2_hash = ((djb2_hash * 33) ^ char) % 0x100000000
+        djb2_hash = ((djb2_hash * 33) ^ char) % hex(max)
 
     return djb2_hash
 
@@ -39,7 +39,11 @@ def hash(string, max):
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    new_pair = Pair(hash(key, hash_table.capacity), value)
+
+    if new_pair.value == hash_table.storage[new_pair.key]:
+        print("You are overwriting a value with a different key")
+    hash_table.storage[new_pair.key] = new_pair.value
 
 
 # '''
@@ -59,7 +63,7 @@ def hash_table_remove(hash_table, key):
 def hash_table_retrieve(hash_table, key):
     for i in hash_table.storage:
         if i == key:
-            return hash
+            return i
         else:
             return None
 
