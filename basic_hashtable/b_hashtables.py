@@ -28,7 +28,7 @@ def hash(string, max):
     djb2_hash = 5381
 
     for char in string:
-        djb2_hash = ((djb2_hash * 33) ^ char) % hex(max)
+        djb2_hash = ((djb2_hash << 5) + djb2_hash + ord(char)) % max
 
     return djb2_hash
 
@@ -43,6 +43,7 @@ def hash_table_insert(hash_table, key, value):
 
     if new_pair.value == hash_table.storage[new_pair.key]:
         print("You are overwriting a value with a different key")
+
     hash_table.storage[new_pair.key] = new_pair.value
 
 
@@ -54,9 +55,9 @@ def hash_table_insert(hash_table, key, value):
 def hash_table_remove(hash_table, key):
     removing = hash(key, hash_table.capacity)
 
-    if hash_table[removing] is None:
+    if hash_table.storage[removing] is None:
         print("There is no value to remove.")
-    hash_table[removing] = None
+    hash_table.storage[removing] = None
 
 
 # '''
@@ -65,11 +66,12 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    for i in hash_table.storage:
-        if i == key:
-            return i
-        else:
-            return None
+    retrieving = hash(key, hash_table.capacity)
+
+    if hash_table.storage[retrieving]:
+        return hash_table.storage[retrieving]
+    else:
+        return None
 
 
 def Testing():
