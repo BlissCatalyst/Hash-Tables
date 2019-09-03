@@ -36,9 +36,10 @@ def hash(string, max):
 # If you are overwriting a value with a different key, print a warning.
 # '''
 def hash_table_insert(hash_table, key, value):
-    index = hash(key, len(hash_table))
+    index = hash(key, len(hash_table.table))
     if hash_table.table[index] is not None:
-        print(f"You are printing over an already stored value with the \"key\", key")
+        print(
+            f"You are printing over an already stored value with the \"{key}\", key")
     hash_table.table[index] = value
 
 # '''
@@ -49,7 +50,11 @@ def hash_table_insert(hash_table, key, value):
 
 
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, len(hash_table.table))
+    if hash_table.table[index] is None:
+        print(
+            f'Nothing was removed because there is no value at key, "{key}".')
+    hash_table.table[index] = None
 
 
 # '''
