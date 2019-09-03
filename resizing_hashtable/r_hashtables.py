@@ -44,6 +44,9 @@ def hash_table_insert(hash_table, key, value):
     else:
         current_node = hash_table.storage[index]
         while current_node.next is not None:
+            if current_node.key == key:
+                current_node.value = value
+                return
             current_node = current_node.next
         current_node.next = LinkedPair(key, value)
 
@@ -53,6 +56,7 @@ def hash_table_insert(hash_table, key, value):
 
 # If you try to remove a value that isn't there, print a warning.
 # '''
+# *** DOES NOT REMOVE NODES - Just changes the keys and values to "None" and keeps the value of .next
 def hash_table_remove(hash_table, key):
     index = hash(key, len(hash_table.storage))
     if hash_table.storage[index] is None:
@@ -93,7 +97,17 @@ def hash_table_retrieve(hash_table, key):
 # Fill this in
 # '''
 def hash_table_resize(hash_table):
-    pass
+    new_table = HashTable(len(hash_table.storage) * 2)
+    for x in hash_table.storage:
+        if x is None:
+            continue
+        else:
+            current_node = x
+            while current_node is not None:
+                hash_table_insert(new_table, current_node.key,
+                                  current_node.value)
+                current_node = current_node.next
+    return new_table
 
 
 def Testing():
