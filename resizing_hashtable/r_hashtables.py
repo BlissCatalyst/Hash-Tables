@@ -43,9 +43,9 @@ def hash_table_insert(hash_table, key, value):
         hash_table.storage[index] = new_node
     else:
         current_node = hash_table.storage[index]
-        while current_node is not None:
+        while current_node.next is not None:
             current_node = current_node.next
-        current_node = LinkedPair(key, value)
+        current_node.next = LinkedPair(key, value)
 
 
 # '''
@@ -61,9 +61,11 @@ def hash_table_remove(hash_table, key):
         current_node = hash_table.storage[index]
         while current_node is not None:
             if current_node.key == key:
-                current_node = current_node.next
+                current_node.key = None
+                current_node.value = None
                 print("Removed successfully")
                 return
+            current_node = current_node.next
         if current_node is None:
             print('There is no value to delete at that key!')
 
@@ -74,7 +76,17 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, len(hash_table.storage))
+    if hash_table.storage[index] is None:
+        print("There is no value at that key!")
+    else:
+        current_node = hash_table.storage[index]
+        while current_node is not None:
+            if current_node.key == key:
+                return current_node.value
+            current_node = current_node.next
+        if current_node is None:
+            print("There is no value at that key!")
 
 
 # '''
