@@ -39,15 +39,19 @@ def hash(string, max):
 def hash_table_insert(hash_table, key, value):
     index = hash(key, len(hash_table.storage))
     if hash_table.storage[index] is None:
-        new_node = LinkedPair(key, value)
-        hash_table.storage[index] = new_node
+        hash_table.storage[index] = LinkedPair(key, value)
     else:
         current_node = hash_table.storage[index]
         while current_node.next is not None:
             if current_node.key == key:
                 current_node.value = value
                 return
-            current_node = current_node.next
+            else:
+                current_node = current_node.next
+        # This checks for the last node because the previous while loop stops if the last node's .next is None. Which means the if statement checking if a key already exists doesn't get run on the last node.
+        if current_node.key == key:
+            current_node.value = value
+            return
         current_node.next = LinkedPair(key, value)
 
 
