@@ -26,7 +26,7 @@ def hash(string, max):
     hash = 5381
     for x in string:
         hash = ((hash << 5) + hash) + ord(x)
-        result = hash & 0xFFFFFFFF
+    result = hash & 0xFFFFFFFF
     return result % max
 
 
