@@ -17,14 +17,20 @@ class LinkedPair:
 # '''
 class HashTable:
     def __init__(self, capacity):
-        pass
+        self.storage = [None] * capacity
+        self.capacity = capacity
+        self.entries = 0
 
 
 # '''
 # Research and implement the djb2 hash function
 # '''
 def hash(string, max):
-    pass
+    hash = 5381
+    for x in string:
+        hash = ((hash << 5) + ord(x))
+    result = hash & 0xFFFFFFFF
+    return result % max
 
 
 # '''
@@ -33,7 +39,27 @@ def hash(string, max):
 # Hint: Used the LL to handle collisions
 # '''
 def hash_table_insert(hash_table, key, value):
-    pass
+    index = hash(key, len(hash_table.storage))
+    if hash_table.storage[index] is None:
+        hash_table.storage[index] = LinkedPair(key, value)
+        hash_table.entries += 1
+        if (hash_table.entries / len(hash_table.storage)) >= 0.7:
+            return hash_table_resize(hash_table)
+        elif (hash_table.entries / len(hash_table.storage)) <= 0.2:
+            return hash_table_resize(hash_table, True)
+    else:
+        current_node = hash_table.storage[index]
+        while current_node.next is not None:
+            if current_node.key == key:
+                current_node.value = value
+                return hash_table
+            else:
+                current_node = current_node.next
+        # This checks for the last node because the previous while loop stops if the last node's .next is None. Which means the if statement checking if a key already exists doesn't get run on the last node.
+        if current_node.key == key:
+            current_node.value = value
+            return hash_table
+        current_node.next = LinkedPair(key, value)
 
 
 # '''
@@ -41,8 +67,22 @@ def hash_table_insert(hash_table, key, value):
 
 # If you try to remove a value that isn't there, print a warning.
 # '''
+# *** DOES NOT REMOVE NODES - Just changes the keys and values to "None" and keeps the value of .next
 def hash_table_remove(hash_table, key):
-    pass
+    index = hash(key, len(hash_table.storage))
+    if hash_table.storage[index] is None:
+        print('There is no value to delete at that key!')
+    else:
+        current_node = hash_table.storage[index]
+        while current_node is not None:
+            if current_node.key == key:
+                current_node.key = None
+                current_node.value = None
+                print("Removed successfully")
+                return
+            current_node = current_node.next
+        if current_node is None:
+            print('There is no value to delete at that key!')
 
 
 # '''
@@ -51,14 +91,39 @@ def hash_table_remove(hash_table, key):
 # Should return None if the key is not found.
 # '''
 def hash_table_retrieve(hash_table, key):
-    pass
+    index = hash(key, len(hash_table.storage))
+    if hash_table.storage[index] is None:
+        print("There is no value at that key!")
+    else:
+        current_node = hash_table.storage[index]
+        while current_node is not None:
+            if current_node.key == key:
+                return current_node.value
+            current_node = current_node.next
+        if current_node is None:
+            print("There is no value at that key!")
 
 
 # '''
 # Fill this in
 # '''
-def hash_table_resize(hash_table):
-    pass
+def hash_table_resize(hash_table, down_scale=False):
+    if down_scale is True:
+        if hash_table.capacity == len(hash_table.storage):
+            return hash_table
+        new_table = HashTable(len(hash_table.storage) / 2)
+    else:
+        new_table = HashTable(len(hash_table.storage) * 2)
+    for x in hash_table.storage:
+        if x is None:
+            continue
+        else:
+            current_node = x
+            while current_node is not None:
+                hash_table_insert(new_table, current_node.key,
+                                  current_node.value)
+                current_node = current_node.next
+    return new_table
 
 
 def Testing():
