@@ -145,12 +145,12 @@ class TestFullHashTable(unittest.TestCase):
         hash_table_insert(ht, "key-3", "val-3")
         hash_table_insert(ht, "key-4", "val-4")
         hash_table_insert(ht, "key-5", "val-5")
-        hash_table_insert(ht, "key-6", "val-6")
+        ht = hash_table_insert(ht, "key-6", "val-6")
         hash_table_insert(ht, "key-7", "val-7")
         hash_table_insert(ht, "key-8", "val-8")
         hash_table_insert(ht, "key-9", "val-9")
 
-        ht = hash_table_resize(ht)
+        # ht = hash_table_resize(ht)
 
         self.assertTrue(len(ht.storage) == 16)
 

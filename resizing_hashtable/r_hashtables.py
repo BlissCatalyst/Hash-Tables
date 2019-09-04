@@ -18,6 +18,8 @@ class LinkedPair:
 class HashTable:
     def __init__(self, capacity):
         self.storage = [None] * capacity
+        self.capacity = capacity
+        self.entries = 0
 
 
 # '''
@@ -40,18 +42,23 @@ def hash_table_insert(hash_table, key, value):
     index = hash(key, len(hash_table.storage))
     if hash_table.storage[index] is None:
         hash_table.storage[index] = LinkedPair(key, value)
+        hash_table.entries += 1
+        if (hash_table.entries / len(hash_table.storage)) >= 0.7:
+            return hash_table_resize(hash_table)
+        elif (hash_table.entries / len(hash_table.storage)) <= 0.2:
+            return hash_table_resize(hash_table, True)
     else:
         current_node = hash_table.storage[index]
         while current_node.next is not None:
             if current_node.key == key:
                 current_node.value = value
-                return
+                return hash_table
             else:
                 current_node = current_node.next
         # This checks for the last node because the previous while loop stops if the last node's .next is None. Which means the if statement checking if a key already exists doesn't get run on the last node.
         if current_node.key == key:
             current_node.value = value
-            return
+            return hash_table
         current_node.next = LinkedPair(key, value)
 
 
@@ -100,8 +107,13 @@ def hash_table_retrieve(hash_table, key):
 # '''
 # Fill this in
 # '''
-def hash_table_resize(hash_table):
-    new_table = HashTable(len(hash_table.storage) * 2)
+def hash_table_resize(hash_table, down_scale=False):
+    if down_scale is True:
+        if hash_table.capacity == len(hash_table.storage):
+            return hash_table
+        new_table = HashTable(len(hash_table.storage) / 2)
+    else:
+        new_table = HashTable(len(hash_table.storage) * 2)
     for x in hash_table.storage:
         if x is None:
             continue
